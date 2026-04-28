@@ -1,45 +1,113 @@
-Advanced Graph Neural Networks for Molecular Property Prediction
-Overview
+# Advanced Graph Neural Networks for Molecular Property Prediction
 
-This repository presents an implementation of MolPath, a chain-aware Graph Neural Network designed for molecular property prediction, with a focus on Blood-Brain Barrier Penetration (BBBP). The model addresses limitations of conventional GNNs in capturing long-range structural dependencies within molecular graphs.
+## Overview
+This repository presents an implementation of **MolPath**, a chain-aware Graph Neural Network (GNN) designed for molecular property prediction, with a primary focus on **Blood-Brain Barrier Penetration (BBBP)**.
 
-Methodology
+Predicting molecular properties is a critical task in drug discovery, where understanding whether a molecule can cross the blood-brain barrier determines its viability for treating central nervous system (CNS) disorders. Traditional Graph Neural Networks (e.g., GCN, MPNN) often struggle to capture **long-range dependencies** within molecular graphs due to limited receptive fields and over-smoothing.
 
-Molecules are represented as graphs with atoms as nodes and bonds as edges. The architecture integrates:
+**MolPath** addresses these challenges by explicitly modeling **multi-hop structural interactions** through path-based message passing, enabling richer and more expressive molecular representations.
 
-PathConv Layers for modeling multi-hop atomic interactions
-Initial Residual Difference Connection (IRDC) to mitigate over-smoothing and preserve initial node representations
-Global Attention Pooling for adaptive aggregation of atom-level embeddings
-Augmented node features with global molecular descriptors (MolLogP, Molecular Weight)
-Model Configuration
-Node feature dimension: 9
-Hidden dimension: 256
-Depth: 6 PathConv layers
-Residual scaling: learnable α, fixed λ
-Optimizer: Adam (lr = 5e-4, weight decay = 1e-4)
-Loss: BCEWithLogitsLoss
-Evaluation metric: ROC-AUC
-Dataset
-BBBP (MoleculeNet benchmark)
-2,039 valid molecular graphs
-Binary classification with class imbalance handled via ROC-AUC
-Results
+---
 
-The model achieves a ROC-AUC of 0.8955, demonstrating competitive performance relative to established GNN baselines such as GCN, MPNN, and D-MPNN.
+## Key Features
+- ✅ Chain-aware message passing via **PathConv layers**
+- ✅ Improved long-range dependency modeling (up to 6 hops)
+- ✅ Mitigation of over-smoothing using **IRDC**
+- ✅ Global context integration with **attention pooling**
+- ✅ Hybrid feature space combining **local + global descriptors**
 
-Implementation Stack
-PyTorch
-PyTorch Geometric
-RDKit
-Scikit-learn
+---
 
-Future Directions
-Explicit shortest-path sequence extraction
-Integration with transformer-based architectures
-Incorporation of 3D geometric features
-Multi-task molecular property prediction
-Author
+## Methodology
 
-Vriddhi Shetty
-BTech Artificial Intelligence & Data Science
-K. J. Somaiya School of Engineering
+### Graph Representation
+Molecules are represented as graphs:
+- **Nodes:** Atoms with 9-dimensional feature vectors  
+- **Edges:** Chemical bonds between atoms  
+
+This representation allows the model to learn structural and chemical relationships directly from molecular topology.
+
+---
+
+### Model Architecture
+
+#### 1. PathConv Layers
+The core of MolPath is a stack of **PathConv layers**, which aggregate information across multi-hop neighborhoods. Unlike standard GNN layers that focus on immediate neighbors, PathConv captures **sequential shortest-path information**, enabling the model to learn interactions between distant atoms.
+
+#### 2. Initial Residual Difference Connection (IRDC)
+To combat **over-smoothing**, where node representations become indistinguishable in deep GNNs:
+- IRDC preserves the **initial node features**
+- Introduces a residual correction mechanism  
+- Ensures stable and discriminative embeddings across layers  
+
+#### 3. Global Attention Pooling
+A **global attention mechanism** is used to aggregate node-level embeddings into a graph-level representation:
+- Learns importance weights for each atom  
+- Enables adaptive focus on chemically relevant substructures  
+
+#### 4. Feature Augmentation
+Node embeddings are enriched with **global molecular descriptors**:
+- **MolLogP** (lipophilicity)  
+- **Molecular Weight**  
+
+This hybrid approach improves predictive performance by combining:
+- Local structural features  
+- Global physicochemical properties  
+
+---
+
+## Model Configuration
+
+| Parameter                | Value                         |
+|------------------------|------------------------------|
+| Node Feature Dimension | 9                            |
+| Hidden Dimension       | 256                          |
+| Number of Layers       | 6 PathConv layers            |
+| Residual Scaling       | Learnable α, fixed λ         |
+| Optimizer              | Adam                         |
+| Learning Rate          | 5e-4                         |
+| Weight Decay           | 1e-4                         |
+| Loss Function          | BCEWithLogitsLoss            |
+| Evaluation Metric      | ROC-AUC                      |
+
+---
+
+## Dataset
+
+### BBBP (MoleculeNet Benchmark)
+- **Task:** Binary classification (BBB permeable vs non-permeable)  
+- **Size:** 2,039 valid molecular graphs  
+- **Challenge:** Class imbalance  
+
+To ensure robust evaluation, performance is measured using **ROC-AUC**, which is insensitive to class imbalance.
+
+---
+
+## Results
+
+MolPath achieves a **ROC-AUC score of 0.8955**, demonstrating strong performance compared to established baselines:
+
+| Model   | Performance (ROC-AUC) |
+|--------|----------------------|
+| GCN    | Baseline             |
+| MPNN   | Baseline             |
+| D-MPNN | Baseline             |
+| **MolPath** | **0.8955**     |
+
+### Key Takeaways
+- Better capture of **long-range dependencies**
+- Reduced over-smoothing in deeper architectures  
+- Strong generalization on molecular property prediction tasks  
+
+---
+
+## Implementation Stack
+
+- **PyTorch** – Deep learning framework  
+- **PyTorch Geometric** – Graph neural network utilities  
+- **RDKit** – Molecular feature extraction and preprocessing  
+- **Scikit-learn** – Evaluation metrics and utilities  
+
+---
+
+## Project Structure (Suggested)
