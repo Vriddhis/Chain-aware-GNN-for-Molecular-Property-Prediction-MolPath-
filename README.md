@@ -107,7 +107,11 @@ MolPath achieves a **ROC-AUC score of 0.8955**, demonstrating strong performance
 - **PyTorch Geometric** – Graph neural network utilities  
 - **RDKit** – Molecular feature extraction and preprocessing  
 - **Scikit-learn** – Evaluation metrics and utilities  
-
 ---
 
-## Project Structure (Suggested)
+## Author
+
+**Vriddhi Shetty**  
+BTech Artificial Intelligence & Data Science  
+K. J. Somaiya School of Engineering  
+
