@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+
+# ignore parent files (optional safeguard)
+../*.csv
+../*.pdf
+../*.pptx
+../*.docx
